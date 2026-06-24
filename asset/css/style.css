@@ -1,0 +1,159 @@
+/* ==========================================================================
+   DELIGHT BUILDERS - CUSTOM PREMIUM APPLE-STYLE STYLES
+   ========================================================================== */
+
+/* Custom Main Scrollbar matching macOS minimalist style */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+/* Apple Pro Shadows & Transitions */
+.apple-card {
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.01);
+}
+
+.apple-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05), 0 4px 10px rgba(0, 0, 0, 0.01);
+}
+
+/* Glassmorphism utility panels - heavy blur matching macOS/iOS frosted sheets */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* Fullscreen modal glassmorphic overlays */
+.modal-glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: saturate(180%) blur(30px);
+    -webkit-backdrop-filter: saturate(180%) blur(30px);
+}
+
+/* Custom Thin Scrollbar for nested elements */
+.scrollbar-thin::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 9999px;
+}
+
+/* Stats Card pulse/shimmer glow animation during counting load */
+@keyframes card-shimmer {
+    0% {
+        border-color: rgba(236, 50, 55, 0.15);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(236, 50, 55, 0.05);
+    }
+    50% {
+        border-color: rgba(236, 50, 55, 0.4);
+        box-shadow: 0 10px 25px rgba(236, 50, 55, 0.1), 0 0 0 2px rgba(236, 50, 55, 0.15);
+    }
+    100% {
+        border-color: rgba(236, 50, 55, 0.15);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(236, 50, 55, 0.05);
+    }
+}
+
+.card-animating {
+    animation: card-shimmer 1.2s infinite ease-in-out;
+}
+
+/* Storytelling timeline progress path styles */
+#timeline-fg-path {
+    filter: drop-shadow(0 0 8px rgba(0, 175, 240, 0.7));
+    transition: stroke-dashoffset 0.05s ease-out;
+}
+
+/* Timeline Circle Positioning and Overlapping */
+#circle-1 {
+    left: 8%;
+    top: 5%;
+}
+#circle-2 {
+    left: 52%;
+    top: 25%;
+}
+#circle-3 {
+    left: 8%;
+    top: 53%;
+}
+#circle-4 {
+    left: 52%;
+    top: 73%;
+}
+
+@media (min-width: 768px) {
+    #circle-1 {
+        left: 15%;
+        top: 10%;
+    }
+    #circle-2 {
+        left: 65%;
+        top: 16%;
+    }
+    #circle-3 {
+        left: 15%;
+        top: 68%;
+    }
+    #circle-4 {
+        left: 65%;
+        top: 74%;
+    }
+}
+
+/* ==========================================================================
+   STORYTELLING TIMELINE - HOUSE SHAPES (CONSTRUCTION THEME)
+   ========================================================================== */
+.timeline-circle {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.timeline-circle .house-bg {
+    color: #e2e8f0;
+    fill: rgba(255, 255, 255, 0.9);
+    filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.03));
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.timeline-circle:hover .house-bg {
+    color: #00aff0;
+    fill: #ffffff;
+    filter: drop-shadow(0 15px 30px rgba(0, 175, 240, 0.1));
+}
+
+.timeline-circle.border-\[\#00aff0\] .house-bg {
+    color: #00aff0;
+    fill: #ffffff;
+    filter: drop-shadow(0 0 25px rgba(0, 175, 240, 0.2));
+}
+
+
