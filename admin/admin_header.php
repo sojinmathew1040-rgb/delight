@@ -49,22 +49,7 @@ $logo_path_resolved = "../" . get_setting('logo_path', 'asset/images/logo.png');
             }
         }
     </script>
-    <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
+    <link rel="stylesheet" href="../asset/css/admin.css">
 </head>
 <body class="h-full font-sans text-slate-800 antialiased flex">
 

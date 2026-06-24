@@ -86,29 +86,7 @@ $logo_path = "../" . get_setting('logo_path', 'asset/images/logo.png');
         }
     </script>
     
-    <style>
-        @media print {
-            .no-print {
-                display: none !important;
-            }
-            body {
-                background: white !important;
-                color: black !important;
-                font-size: 10pt;
-            }
-            .print-container {
-                box-shadow: none !important;
-                border: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                max-width: 100% !important;
-            }
-            .inquiry-card {
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../asset/css/admin.css">
 </head>
 <body class="font-sans text-slate-800 antialiased p-0 md:p-8">
 
