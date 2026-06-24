@@ -137,6 +137,57 @@ function render_team_branch($member, $all_members_by_parent, $depth = 0)
     <?php
 }
 
+function render_team_branch_mobile($member, $all_members_by_parent, $depth = 0)
+{
+    $member_id = $member['id'];
+    $children = isset($all_members_by_parent[$member_id]) ? $all_members_by_parent[$member_id] : [];
+    
+    $image_path = $member['image'];
+    $has_image = !empty($image_path) && file_exists($image_path);
+    
+    // Indent based on depth to show hierarchy
+    $indent_class = "";
+    if ($depth === 1) {
+        $indent_class = "ml-6 border-l border-slate-200 pl-4";
+    } elseif ($depth > 1) {
+        $indent_class = "ml-12 border-l border-slate-200 pl-4";
+    }
+    
+    ?>
+    <div class="space-y-4 <?php echo $indent_class; ?>">
+        <!-- Card -->
+        <div class="glass-panel border border-[#e2e8f0] rounded-2xl p-4 flex items-center gap-4 bg-white/80 backdrop-blur-md relative z-10 shadow-sm">
+            <!-- Avatar -->
+            <div class="relative w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center overflow-hidden bg-slate-50 flex-shrink-0">
+                <?php if ($has_image): ?>
+                    <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($member['name']); ?>" class="w-full h-full object-cover">
+                <?php else: ?>
+                    <span class="font-display font-bold text-xs text-[#0f172a]"><?php echo htmlspecialchars($member['avatar_text']); ?></span>
+                <?php endif; ?>
+            </div>
+            
+            <!-- Details -->
+            <div class="min-w-0 flex-1">
+                <h3 class="font-display text-sm text-[#0f172a] font-extrabold tracking-tight truncate"><?php echo htmlspecialchars($member['name']); ?></h3>
+                <p class="text-[9px] tracking-wider uppercase text-[#00aff0] font-bold truncate"><?php echo htmlspecialchars($member['role']); ?></p>
+                <p class="text-[10px] text-[#0f172a]/60 leading-tight font-normal mt-1 line-clamp-2">
+                    <?php echo htmlspecialchars($member['description']); ?>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Render Children recursively -->
+        <?php if (!empty($children)): ?>
+            <div class="space-y-4">
+                <?php foreach ($children as $child): ?>
+                    <?php render_team_branch_mobile($child, $all_members_by_parent, $depth + 1); ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php
+}
+
 // Fetch settings
 $site_title = get_setting('site_title', 'Delight Builders | Professional Architectural Legacy & Principles');
 $established_year = get_setting('established_year', '2006');
@@ -393,7 +444,8 @@ try {
                         }
                     }
                     ?>
-                    <div class="relative w-full overflow-x-auto mt-16 pb-12 scrollbar-thin select-none">
+                    <!-- Desktop View (Horizontal Tree) -->
+                    <div class="hidden md:block relative w-full overflow-x-auto mt-16 pb-12 scrollbar-thin select-none">
                         <div class="inline-block min-w-full p-4 align-middle">
                             <?php if (count($roots) > 0): ?>
                                 <div class="flex flex-row justify-center items-start gap-12">
@@ -406,6 +458,17 @@ try {
                             <?php endif; ?>
                         </div>
                     </div>
+
+                    <!-- Mobile View (Vertical Connected List) -->
+                    <div class="block md:hidden mt-10 space-y-6">
+                        <?php if (count($roots) > 0): ?>
+                            <?php foreach ($roots as $root): ?>
+                                <?php render_team_branch_mobile($root, $all_members_by_parent); ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="p-8 text-center text-slate-400">No team members registered yet.</div>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </section>
 
@@ -413,7 +476,7 @@ try {
 
         <!-- FOOTER SECTION -->
         <footer class="bg-[#f8fafc]/95 py-16 px-6 md:px-16 border-t border-[#e2e8f0]/60 z-20 relative">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative">
                 <!-- Branding -->
                 <div class="flex flex-col items-center md:items-start space-y-3">
                     <img src="<?php echo $logo_path; ?>" alt="Delight Builders Logo" class="h-16 w-auto object-contain">
@@ -421,10 +484,24 @@ try {
                     <span class="text-[10px] tracking-widest text-[#64748b] font-semibold uppercase">STRUCTURAL POETRY • SINCE 2006</span>
                 </div>
 
-                <!-- Copyright -->
-                <div class="text-[11px] tracking-normal text-[#64748b] text-center md:text-right space-y-1 font-normal">
-                    <p>© <?php echo date("Y"); ?> Delight Builders Inc. All architectural frameworks reserved.</p>
-                    <p>Designed for premium longevity. Engineered to absolute structural coordinates.</p>
+                <!-- Copyright & Scroll-to-Top Column -->
+                <div class="flex flex-col items-center md:items-end space-y-5 w-full md:w-auto">
+                    <div class="text-[11px] tracking-normal text-[#64748b] text-center md:text-right space-y-1 font-normal pb-8 md:pb-0">
+                        <p>© <?php echo date("Y"); ?> Delight Builders Inc. All architectural frameworks reserved.</p>
+                        <p>Designed for premium longevity. Engineered to absolute structural coordinates.</p>
+                    </div>
+                    
+                    <!-- Scroll to Top Button -->
+                    <div class="absolute bottom-[-16px] right-0 md:relative md:bottom-auto md:right-auto">
+                        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+                            class="group p-3 bg-gradient-to-r from-[#00aff0] to-[#ec3237] text-white hover:shadow-lg rounded-full transition-all duration-300 hover:scale-105 focus:outline-none flex items-center justify-center cursor-pointer border-none shadow-sm"
+                            aria-label="Scroll to top"
+                            title="Scroll to Top">
+                            <svg class="w-4 h-4 transform group-hover:-translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </footer>

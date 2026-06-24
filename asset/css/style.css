@@ -93,37 +93,37 @@
 
 /* Timeline Circle Positioning and Overlapping */
 #circle-1 {
-    left: 8%;
+    left: 5%;
     top: 5%;
 }
 #circle-2 {
-    left: 52%;
+    left: 62%;
     top: 25%;
 }
 #circle-3 {
-    left: 8%;
+    left: 5%;
     top: 53%;
 }
 #circle-4 {
-    left: 52%;
+    left: 62%;
     top: 73%;
 }
 
 @media (min-width: 768px) {
     #circle-1 {
-        left: 15%;
+        left: 10%;
         top: 10%;
     }
     #circle-2 {
-        left: 65%;
+        left: 72%;
         top: 16%;
     }
     #circle-3 {
-        left: 15%;
+        left: 10%;
         top: 68%;
     }
     #circle-4 {
-        left: 65%;
+        left: 72%;
         top: 74%;
     }
 }

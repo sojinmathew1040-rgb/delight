@@ -389,10 +389,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
         <section id="timeline" class="relative border-b border-[#e2e8f0]/60 bg-[#f8fafc]/30">
             <div class="h-[250vh]" id="timeline-scroll-track">
                 <div
-                    class="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between py-6 md:py-8 px-6 md:px-16 lg:px-24">
+                    class="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between py-10 px-0">
 
                     <!-- Section Header -->
-                    <div class="text-center space-y-4 max-w-xl mx-auto z-20">
+                    <div class="text-center space-y-4 max-w-xl mx-auto z-20 px-6">
                         <span class="text-xs text-[#00aff0] tracking-normal uppercase font-semibold block">02 / Workflow
                             Timeline</span>
                         <h2 class="font-display text-3xl md:text-5xl text-[#0f172a] font-extrabold tracking-tight">Our
@@ -519,7 +519,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
 
                     <!-- Unified Detail Description Card -->
                     <div id="timeline-detail-panel"
-                        class="max-w-xl mx-auto glass-panel border border-[#e2e8f0]/80 rounded-2xl p-4 md:p-5 shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition-all duration-300 z-20 min-h-[110px] flex flex-col justify-center text-center">
+                        class="max-w-xl mx-6 sm:mx-auto glass-panel border border-[#e2e8f0]/80 rounded-2xl p-4 md:p-5 shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition-all duration-300 z-20 min-h-[110px] flex flex-col justify-center text-center">
                         <span id="timeline-detail-subtitle"
                             class="text-[10px] tracking-widest text-[#00aff0] uppercase font-bold mb-1">Diagnostic
                             Geometries</span>
@@ -927,7 +927,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
 
         <!-- FOOTER SECTION -->
         <footer class="bg-[#f8fafc]/95 py-16 px-6 md:px-16 border-t border-[#e2e8f0]/60 z-20 relative">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative">
                 <!-- Branding -->
                 <div class="flex flex-col items-center md:items-start space-y-3">
                     <img src="<?php echo $logo_path; ?>" alt="Delight Builders Logo" class="h-16 w-auto object-contain">
@@ -937,10 +937,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
                         SINCE 2006</span>
                 </div>
 
-                <!-- Copyright -->
-                <div class="text-[11px] tracking-normal text-[#64748b] text-center md:text-right space-y-1 font-normal">
-                    <p>© <?php echo date("Y"); ?> Delight Builders Inc. All architectural frameworks reserved.</p>
-                    <p>Designed for premium longevity. Engineered to absolute structural coordinates.</p>
+                <!-- Copyright & Scroll-to-Top Column -->
+                <div class="flex flex-col items-center md:items-end space-y-5 w-full md:w-auto">
+                    <div class="text-[11px] tracking-normal text-[#64748b] text-center md:text-right space-y-1 font-normal pb-8 md:pb-0">
+                        <p>© <?php echo date("Y"); ?> Delight Builders Inc. All architectural frameworks reserved.</p>
+                        <p>Designed for premium longevity. Engineered to absolute structural coordinates.</p>
+                    </div>
+                    
+                    <!-- Scroll to Top Button -->
+                    <div class="absolute bottom-[-16px] right-0 md:relative md:bottom-auto md:right-auto">
+                        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+                            class="group p-3 bg-gradient-to-r from-[#00aff0] to-[#ec3237] text-white hover:shadow-lg rounded-full transition-all duration-300 hover:scale-105 focus:outline-none flex items-center justify-center cursor-pointer border-none shadow-sm"
+                            aria-label="Scroll to top"
+                            title="Scroll to Top">
+                            <svg class="w-4 h-4 transform group-hover:-translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </footer>
