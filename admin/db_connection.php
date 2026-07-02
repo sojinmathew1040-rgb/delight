@@ -171,6 +171,18 @@ try {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB;");
 
+    // Testimonials Table
+    $pdo->exec("CREATE TABLE IF NOT EXISTS testimonials (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        client_name VARCHAR(100) NOT NULL,
+        client_designation VARCHAR(150) NOT NULL,
+        project_name VARCHAR(100) NOT NULL,
+        quote TEXT NOT NULL,
+        color VARCHAR(20) DEFAULT 'blue',
+        sort_order INT DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB;");
+
 } catch (PDOException $e) {
     die("Database Migration Error: " . $e->getMessage());
 }
@@ -355,6 +367,41 @@ try {
             $insert_cat->execute([$cat_name]);
         }
     }
+
+    // I. Seed Testimonials
+    $stmt = $pdo->query("SELECT COUNT(*) FROM testimonials");
+    if ($stmt->fetchColumn() == 0) {
+        $default_testimonials = [
+            [
+                'client_name' => 'Isadora R. Sterling',
+                'client_designation' => 'Philanthropist & Art Collector',
+                'project_name' => 'The Obsidian Villa',
+                'quote' => 'Their brutalist gravity combined with carbon-negative glulam timber frames is revolutionary. Our custom seaside villa stands as a generational masterpiece.',
+                'color' => 'red',
+                'sort_order' => 1
+            ],
+            [
+                'client_name' => 'Alaric K. Vance',
+                'client_designation' => 'Managing Director, Vance Maritime',
+                'project_name' => 'The Aether Spine Towers',
+                'quote' => 'Delight Builders synthesizes raw concrete mass and biophilic glass to create living, breathing structural poetry. The attention to volumetric math was outstanding.',
+                'color' => 'blue',
+                'sort_order' => 2
+            ],
+            [
+                'client_name' => 'Dr. Cassian G. Vance',
+                'client_designation' => 'Director, Kerala Eco-Institute',
+                'project_name' => 'The Biophilic Pavilion',
+                'quote' => 'The database blueprint transparency allowed us to track every seismic soil calculation and glulam timber joint in real time. Absolute structural confidence.',
+                'color' => 'purple',
+                'sort_order' => 3
+            ]
+        ];
+        $insert = $pdo->prepare("INSERT INTO testimonials (client_name, client_designation, project_name, quote, color, sort_order) VALUES (?, ?, ?, ?, ?, ?)");
+        foreach ($default_testimonials as $t) {
+            $insert->execute([$t['client_name'], $t['client_designation'], $t['project_name'], $t['quote'], $t['color'], $t['sort_order']]);
+        }
+    }
 } catch (PDOException $e) {
     die("Database Seeding Error: " . $e->getMessage());
 }
@@ -372,4 +419,21 @@ function get_setting($key, $default = '') {
     } catch (PDOException $e) {
         return $default;
     }
+}
+
+/**
+ * Helper function to compute initials from name
+ */
+function get_initials($name) {
+    $clean_name = preg_replace('/^(dr\.|mr\.|ms\.|mrs\.|prof\.)\s+/i', '', trim($name));
+    $words = explode(' ', $clean_name);
+    $initials = '';
+    if (count($words) >= 2) {
+        $initials = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
+    } elseif (count($words) === 1 && !empty($words[0])) {
+        $initials = strtoupper(substr($words[0], 0, 2));
+    } else {
+        $initials = 'DB';
+    }
+    return $initials;
 }

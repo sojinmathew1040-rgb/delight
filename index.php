@@ -75,6 +75,14 @@ try {
     $db_categories = [];
 }
 
+// Fetch testimonials
+try {
+    $stmt_test = $pdo->query("SELECT * FROM testimonials ORDER BY sort_order ASC, id ASC");
+    $db_testimonials = $stmt_test->fetchAll();
+} catch (PDOException $e) {
+    $db_testimonials = [];
+}
+
 // Contact form processing (Stateful validation)
 $inquiry_sent = false;
 $inquiry_error = "";
@@ -676,11 +684,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
             </div>
         </section>
 
+        <?php if (!empty($db_testimonials)): 
+            // Triplicate the testimonials so that it creates a seamless infinite marquee scroll
+            $marquee_testimonials = array_merge($db_testimonials, $db_testimonials, $db_testimonials);
+        ?>
         <!-- SECTION: TESTIMONIALS -->
         <section id="testimonials"
-            class="relative py-32 px-6 md:px-16 lg:px-24 border-b border-[#e2e8f0]/60 bg-[#f8fafc]/40">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-6">
+            class="relative py-32 overflow-hidden border-b border-[#e2e8f0]/60 bg-[#f8fafc]/40">
+            <div class="px-6 md:px-16 lg:px-24 max-w-7xl mx-auto mb-20">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                     <div class="space-y-4">
                         <span class="text-xs text-[#00aff0] tracking-normal uppercase font-semibold block">05 /
                             Conceptual Trust</span>
@@ -695,13 +707,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
                         </p>
                     </div>
                 </div>
+            </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Testimonial 1 -->
+            <!-- Horizontal Scroll Marquee Container -->
+            <div class="relative w-full overflow-hidden">
+                <!-- Premium edge-fades to blend cards dynamically -->
+                <div class="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#f8fafc] via-[#f8fafc]/80 to-transparent z-10 pointer-events-none"></div>
+                <div class="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#f8fafc] via-[#f8fafc]/80 to-transparent z-10 pointer-events-none"></div>
+
+                <div class="animate-marquee-container gap-8 py-4 px-4">
+                    <?php foreach ($marquee_testimonials as $t): 
+                        $initials = get_initials($t['client_name']);
+                        
+                        $quote_icon_color = 'text-[#00aff0]';
+                        $project_tag_color = 'text-[#00aff0]';
+                        
+                        if ($t['color'] === 'red') {
+                            $quote_icon_color = 'text-[#ec3237]';
+                            $project_tag_color = 'text-[#ec3237]';
+                        } elseif ($t['color'] === 'purple') {
+                            $quote_icon_color = 'text-purple-600';
+                            $project_tag_color = 'text-purple-600';
+                        }
+                    ?>
+                    <!-- Testimonial Card -->
                     <div
-                        class="glass-panel border border-[#e2e8f0] rounded-3xl p-8 flex flex-col justify-between space-y-8 apple-card shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
+                        class="w-[300px] md:w-[420px] shrink-0 glass-panel border border-[#e2e8f0] rounded-3xl p-8 flex flex-col justify-between space-y-8 apple-card shadow-[0_8px_30px_rgba(0,0,0,0.02)] whitespace-normal">
                         <!-- Quote Icon -->
-                        <div class="text-[#ec3237] opacity-35">
+                        <div class="<?php echo $quote_icon_color; ?> opacity-35">
                             <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
@@ -710,94 +743,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
 
                         <!-- Testimonial text -->
                         <p class="text-xs md:text-sm text-[#0f172a]/80 leading-relaxed font-normal flex-grow italic">
-                            "Their brutalist gravity combined with carbon-negative glulam timber frames is
-                            revolutionary. Our custom seaside villa stands as a generational masterpiece."
+                            "<?php echo htmlspecialchars($t['quote']); ?>"
                         </p>
 
                         <!-- Client info -->
                         <div class="border-t border-[#e2e8f0] pt-6 flex items-center space-x-4">
                             <div
-                                class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-display text-xs font-bold text-[#0f172a]">
-                                IS
+                                class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-display text-xs font-bold text-[#0f172a] shrink-0">
+                                <?php echo htmlspecialchars($initials); ?>
                             </div>
-                            <div>
-                                <h4 class="font-display text-xs text-[#0f172a] font-bold">Isadora R. Sterling</h4>
-                                <p class="text-[9px] tracking-wider uppercase text-[#64748b] font-semibold">
-                                    Philanthropist & Art Collector</p>
-                                <span class="text-[8px] text-[#ec3237] font-bold block uppercase mt-0.5">The Obsidian
-                                    Villa</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Testimonial 2 -->
-                    <div
-                        class="glass-panel border border-[#e2e8f0] rounded-3xl p-8 flex flex-col justify-between space-y-8 apple-card shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
-                        <!-- Quote Icon -->
-                        <div class="text-[#00aff0] opacity-35">
-                            <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                            </svg>
-                        </div>
-
-                        <!-- Testimonial text -->
-                        <p class="text-xs md:text-sm text-[#0f172a]/80 leading-relaxed font-normal flex-grow italic">
-                            "Delight Builders synthesizes raw concrete mass and biophilic glass to create living,
-                            breathing structural poetry. The attention to volumetric math was outstanding."
-                        </p>
-
-                        <!-- Client info -->
-                        <div class="border-t border-[#e2e8f0] pt-6 flex items-center space-x-4">
-                            <div
-                                class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-display text-xs font-bold text-[#0f172a]">
-                                AV
-                            </div>
-                            <div>
-                                <h4 class="font-display text-xs text-[#0f172a] font-bold">Alaric K. Vance</h4>
-                                <p class="text-[9px] tracking-wider uppercase text-[#64748b] font-semibold">Managing
-                                    Director, Vance Maritime</p>
-                                <span class="text-[8px] text-[#00aff0] font-bold block uppercase mt-0.5">The Aether
-                                    Spine Towers</span>
+                            <div class="min-w-0">
+                                <h4 class="font-display text-xs text-[#0f172a] font-bold truncate"><?php echo htmlspecialchars($t['client_name']); ?></h4>
+                                <p class="text-[9px] tracking-wider uppercase text-[#64748b] font-semibold truncate">
+                                    <?php echo htmlspecialchars($t['client_designation']); ?></p>
+                                <span class="text-[8px] <?php echo $project_tag_color; ?> font-bold block uppercase mt-0.5 truncate"><?php echo htmlspecialchars($t['project_name']); ?></span>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Testimonial 3 -->
-                    <div
-                        class="glass-panel border border-[#e2e8f0] rounded-3xl p-8 flex flex-col justify-between space-y-8 apple-card shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
-                        <!-- Quote Icon -->
-                        <div class="text-purple-600 opacity-35">
-                            <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                            </svg>
-                        </div>
-
-                        <!-- Testimonial text -->
-                        <p class="text-xs md:text-sm text-[#0f172a]/80 leading-relaxed font-normal flex-grow italic">
-                            "The database blueprint transparency allowed us to track every seismic soil calculation and
-                            glulam timber joint in real time. Absolute structural confidence."
-                        </p>
-
-                        <!-- Client info -->
-                        <div class="border-t border-[#e2e8f0] pt-6 flex items-center space-x-4">
-                            <div
-                                class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-display text-xs font-bold text-[#0f172a]">
-                                CV
-                            </div>
-                            <div>
-                                <h4 class="font-display text-xs text-[#0f172a] font-bold">Dr. Cassian G. Vance</h4>
-                                <p class="text-[9px] tracking-wider uppercase text-[#64748b] font-semibold">Director,
-                                    Kerala Eco-Institute</p>
-                                <span class="text-[8px] text-purple-600 font-bold block uppercase mt-0.5">The Biophilic
-                                    Pavilion</span>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </section>
+        <?php endif; ?>
 
         <!-- SECTION: INQUIRY FORM / CONTACT -->
         <section id="contact" class="relative py-32 px-6 md:px-16 lg:px-24 border-b border-[#e2e8f0]/60">

@@ -156,4 +156,24 @@
     filter: drop-shadow(0 0 25px rgba(0, 175, 240, 0.2));
 }
 
+/* Infinite Horizontal Scrolling Marquee for Testimonials */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.3333%);
+  }
+}
+
+.animate-marquee-container {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee-container:hover {
+  animation-play-state: paused;
+}
+
 
