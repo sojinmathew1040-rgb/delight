@@ -86,6 +86,7 @@ foreach ($portfolio as $project_idx => $project) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delight Builders | Architectural Blueprints Archive</title>
+    <link rel="icon" type="image/png" href="<?php echo htmlspecialchars($logo_path); ?>">
 
     <!-- Meta tags for SEO -->
     <meta name="description"

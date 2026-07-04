@@ -114,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($site_title); ?></title>
+    <link rel="icon" type="image/png" href="<?php echo htmlspecialchars($logo_path); ?>">
 
     <!-- Meta tags for SEO -->
     <meta name="description"
@@ -1060,7 +1061,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
 
             // Generate sequence frame file path based on zero-padded index
             const pad = (num, size) => num.toString().padStart(size, '0');
-            const getFramePath = (index) => `asset/sequence/frame_${pad(index, 3)}_delay-0.066s.png`;
+            const sequenceFolder = '<?php echo file_exists("assets/sequence") ? "assets/sequence" : "asset/sequence"; ?>';
+            const getFramePath = (index) => `${sequenceFolder}/frame_${pad(index, 3)}_delay-0.066s.png`;
 
             // State management
             let currentFrameIndex = 0;
@@ -1154,46 +1156,95 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
 
             // Image preloader & caching sequence
             function preloadSequence() {
-                let loadPromises = [];
+                // Determine critical frames (first 5 frames) to get the page loaded and visible immediately
+                const criticalFrames = [0, 1, 2, 3, 4];
+                const criticalPromises = [];
 
+                // Pre-populate images array with placeholder Image objects to maintain index alignment
                 for (let i = 0; i < frameCount; i++) {
-                    const img = new Image();
-                    img.src = getFramePath(i);
+                    images[i] = new Image();
+                }
 
-                    const imgPromise = new Promise((resolve) => {
+                // Helper to load a single frame
+                function loadFrame(index) {
+                    return new Promise((resolve) => {
+                        const img = images[index];
                         img.onload = () => {
                             imagesLoadedCount++;
-                            if (!hasLoadedBefore) {
-                                // Update preloader percent and bar width
-                                const percent = Math.floor((imagesLoadedCount / frameCount) * 100);
-                                preloaderBar.style.width = `${percent}%`;
-                                preloaderPercent.innerText = `${percent}%`;
-                            } else {
-                                // If repeat visit, redraw if the frame is needed immediately
-                                if (Math.floor(currentFrameIndex) === i) {
-                                    drawFrame(currentFrameIndex);
-                                }
+                            if (Math.floor(currentFrameIndex) === index) {
+                                drawFrame(currentFrameIndex);
                             }
-                            resolve();
+                            resolve(index);
                         };
                         img.onerror = () => {
-                            // Fail-safe to prevent blocking page loading if a frame is missing
                             imagesLoadedCount++;
-                            if (!hasLoadedBefore) {
-                                const percent = Math.floor((imagesLoadedCount / frameCount) * 100);
-                                preloaderBar.style.width = `${percent}%`;
-                                preloaderPercent.innerText = `${percent}%`;
-                            }
-                            resolve();
+                            resolve(index);
                         };
+                        img.src = getFramePath(index);
                     });
+                }
 
-                    images.push(img);
-                    loadPromises.push(imgPromise);
+                // Start loading critical frames
+                criticalFrames.forEach(idx => {
+                    criticalPromises.push(loadFrame(idx));
+                });
+
+                // Smooth progress animation for preloader percentage
+                let currentPercent = 0;
+                let preloaderInterval = null;
+
+                function updatePreloaderProgress() {
+                    if (hasLoadedBefore) return;
+
+                    const criticalLoadedCount = criticalFrames.filter(idx => images[idx].complete).length;
+                    const criticalPercent = (criticalLoadedCount / criticalFrames.length) * 100;
+
+                    let targetPercent = Math.min(99, Math.floor(criticalPercent));
+                    if (criticalLoadedCount === criticalFrames.length) {
+                        targetPercent = 100;
+                    }
+
+                    if (currentPercent < targetPercent) {
+                        currentPercent += Math.ceil((targetPercent - currentPercent) * 0.1);
+                        if (currentPercent > targetPercent) currentPercent = targetPercent;
+                        preloaderBar.style.width = `${currentPercent}%`;
+                        preloaderPercent.innerText = `${currentPercent}%`;
+                    }
+
+                    if (currentPercent >= 100) {
+                        clearInterval(preloaderInterval);
+                        onPreloaderComplete();
+                    }
+                }
+
+                if (!hasLoadedBefore) {
+                    preloaderInterval = setInterval(updatePreloaderProgress, 50);
+                }
+
+                function onPreloaderComplete() {
+                    setTimeout(() => {
+                        if (preloader) {
+                            preloader.classList.add('opacity-0', 'pointer-events-none');
+                        }
+
+                        canvas.classList.remove('opacity-0');
+                        mainContent.classList.remove('opacity-0');
+
+                        resizeCanvas();
+                        drawFrame(0);
+
+                        generatePath();
+                        updateTimelineScroll();
+
+                        window.addEventListener('scroll', handleScroll, { passive: true });
+
+                        sessionStorage.setItem('site_loaded', 'true');
+
+                        setTimeout(openInquiryModal, 400);
+                    }, 300);
                 }
 
                 if (hasLoadedBefore) {
-                    // For repeat visits, initialize and display immediately
                     canvas.classList.remove('opacity-0');
                     mainContent.classList.remove('opacity-0');
                     resizeCanvas();
@@ -1202,42 +1253,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
                     updateTimelineScroll();
                     window.addEventListener('scroll', handleScroll, { passive: true });
 
-                    // Trigger inquiry modal on page load if not dismissed
                     if (!sessionStorage.getItem('inquiry_modal_dismissed')) {
                         setTimeout(openInquiryModal, 400);
                     }
-                } else {
-                    // First-time visit: wait for all assets to load
-                    Promise.all(loadPromises).then(() => {
-                        // Slight delay for human perception before entering the website
-                        setTimeout(() => {
-                            // Fade preloader away
-                            preloader.classList.add('opacity-0', 'pointer-events-none');
-
-                            // Show background canvas & main content
-                            canvas.classList.remove('opacity-0');
-                            mainContent.classList.remove('opacity-0');
-
-                            // Sync canvas resolution & paint first frame
-                            resizeCanvas();
-                            drawFrame(0);
-
-                            // Generate storytelling path coordinates & initialize positions
-                            generatePath();
-                            updateTimelineScroll();
-
-                            // Initialize scroll listening
-                            window.addEventListener('scroll', handleScroll, { passive: true });
-
-                            // Mark site as loaded in this session
-                            sessionStorage.setItem('site_loaded', 'true');
-
-                            // Trigger centered inquiry modal on page load
-                            setTimeout(openInquiryModal, 400);
-
-                        }, 500);
-                    });
                 }
+
+                // Wait for critical frames, then load the remaining sequence frames in the background
+                Promise.all(criticalPromises).then(() => {
+                    // Force complete preloader progress bar if still running
+                    if (!hasLoadedBefore && currentPercent < 100) {
+                        clearInterval(preloaderInterval);
+                        let finishPercent = currentPercent;
+                        const finishInterval = setInterval(() => {
+                            finishPercent += 5;
+                            if (finishPercent >= 100) {
+                                finishPercent = 100;
+                                clearInterval(finishInterval);
+                                preloaderBar.style.width = '100%';
+                                preloaderPercent.innerText = '100%';
+                                onPreloaderComplete();
+                            } else {
+                                preloaderBar.style.width = `${finishPercent}%`;
+                                preloaderPercent.innerText = `${finishPercent}%`;
+                            }
+                        }, 30);
+                    }
+
+                    // Background load all remaining frames with concurrency limit of 3
+                    const queue = [];
+                    for (let i = 0; i < frameCount; i++) {
+                        if (!criticalFrames.includes(i)) {
+                            queue.push(i);
+                        }
+                    }
+
+                    const CONCURRENCY_LIMIT = 3;
+                    let activeConnections = 0;
+
+                    function processQueue() {
+                        while (queue.length > 0 && activeConnections < CONCURRENCY_LIMIT) {
+                            const nextFrame = queue.shift();
+                            activeConnections++;
+                            loadFrame(nextFrame).then(() => {
+                                activeConnections--;
+                                processQueue();
+                            });
+                        }
+                    }
+
+                    processQueue();
+                });
             }
 
             // Inquiry Modal Controls

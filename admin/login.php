@@ -54,6 +54,7 @@ $logo_path_resolved = "../" . get_setting('logo_path', 'asset/images/logo.png');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Login | Delight Builders Control Center</title>
+    <link rel="icon" type="image/png" href="<?php echo htmlspecialchars($logo_path_resolved); ?>">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
