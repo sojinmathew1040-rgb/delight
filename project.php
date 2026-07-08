@@ -114,7 +114,7 @@ try {
     </script>
 
     <!-- Custom styling -->
-    <link rel="stylesheet" href="asset/css/style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="asset/css/style.css?v=<?php echo filemtime('asset/css/style.css'); ?>">
 </head>
 
 <body
@@ -269,7 +269,7 @@ try {
         <footer class="bg-[#f8fafc]/95 py-8 px-6 md:px-16 border-t border-[#e2e8f0]/60 z-20 relative">
             <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div class="flex items-center space-x-3">
-                    <img src="<?php echo $logo_path; ?>" alt="Delight Builders" class="h-10 w-auto object-contain">
+                    <img src="<?php echo $logo_path; ?>" alt="Delight Builders" loading="lazy" class="h-10 w-auto object-contain">
                     <span class="font-display text-[#0f172a] font-bold tracking-widest text-xs uppercase">DELIGHT BUILDERS</span>
                 </div>
                 <div class="text-[10px] tracking-normal text-[#64748b] text-center sm:text-right font-medium">
@@ -419,7 +419,7 @@ try {
                     const btn = document.createElement('button');
                     btn.type = 'button';
                     btn.className = `thumbnail-btn aspect-square border-2 border-[#e2e8f0] opacity-40 hover:opacity-100 focus:outline-none transition-all duration-300 relative overflow-hidden rounded-xl bg-slate-900`;
-                    btn.innerHTML = `<img src="${image.src}" alt="${image.title}" class="w-full h-full object-cover">`;
+                    btn.innerHTML = `<img src="${image.src}" alt="${image.title}" loading="lazy" class="w-full h-full object-cover">`;
                     
                     btn.addEventListener('click', () => {
                         activeIdx = idx;

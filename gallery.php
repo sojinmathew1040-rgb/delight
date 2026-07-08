@@ -125,7 +125,7 @@ foreach ($portfolio as $project_idx => $project) {
     </script>
 
     <!-- Custom styling -->
-    <link rel="stylesheet" href="asset/css/style.css">
+    <link rel="stylesheet" href="asset/css/style.css?v=<?php echo filemtime('asset/css/style.css'); ?>">
 </head>
 
 <body
@@ -190,7 +190,7 @@ foreach ($portfolio as $project_idx => $project) {
                             data-category="<?php echo $photo['category']; ?>">
 
                             <!-- Gallery Image -->
-                            <img src="<?php echo $resolved_src; ?>" alt="<?php echo $photo['title']; ?>"
+                            <img src="<?php echo $resolved_src; ?>" alt="<?php echo $photo['title']; ?>" loading="lazy"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-95 group-hover:brightness-100 ease-in-out">
 
                             <!-- Dynamic Overlay details on hover -->
@@ -266,7 +266,7 @@ foreach ($portfolio as $project_idx => $project) {
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
                 <!-- Branding -->
                 <div class="flex flex-col items-center md:items-start space-y-3">
-                    <img src="<?php echo $logo_path; ?>" alt="Delight Builders Logo" class="h-16 w-auto object-contain">
+                    <img src="<?php echo $logo_path; ?>" alt="Delight Builders Logo" loading="lazy" class="h-16 w-auto object-contain">
                     <span class="font-display text-[#0f172a] font-extrabold tracking-widest text-base uppercase">DELIGHT BUILDERS</span>
                     <span class="text-[10px] tracking-widest text-[#64748b] font-semibold uppercase">STRUCTURAL POETRY • SINCE 2006</span>
                 </div>

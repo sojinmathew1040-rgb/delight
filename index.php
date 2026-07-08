@@ -154,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
     </script>
 
     <!-- Custom CSS for luxury scrollbar, overlays, and animations -->
-    <link rel="stylesheet" href="asset/css/style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="asset/css/style.css?v=<?php echo filemtime('asset/css/style.css'); ?>">
 </head>
 
 <body
@@ -306,10 +306,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
                 <!-- Right Content Panel -->
                 <div
                     class="lg:col-span-7 space-y-8 text-[#0f172a]/75 font-normal text-base md:text-lg leading-relaxed pt-2">
-                    <p>
+                    <p align="justify">
                         <?php echo htmlspecialchars($philosophy_text_1); ?>
                     </p>
-                    <p>
+                    <p align="justify">
                         <?php echo htmlspecialchars($philosophy_text_2); ?>
                     </p>
                     <div class="grid grid-cols-2 gap-6 pt-4 text-[#0f172a]">
@@ -592,7 +592,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
                             class="portfolio-card-link group relative bg-white border border-[#e2e8f0] overflow-hidden flex flex-col justify-between transition-all duration-500 rounded-2xl block shadow-[0_8px_30px_rgba(0,0,0,0.03)] apple-card">
                             <!-- Image Container -->
                             <div class="relative overflow-hidden aspect-[4/3] bg-[#f8fafc]">
-                                <img src="<?php echo $image_path; ?>" alt="<?php echo $project['title']; ?>"
+                                <img src="<?php echo $image_path; ?>" alt="<?php echo $project['title']; ?>" loading="lazy"
                                     class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-in-out filter brightness-[0.98] group-hover:brightness-100">
 
                                 <!-- Subtle image grid layer -->
@@ -609,7 +609,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
                                     <h3 class="font-display text-xl text-[#0f172a] font-extrabold tracking-tight pt-2">
                                         <?php echo $project['title']; ?>
                                     </h3>
-                                    <p class="text-[#0f172a]/70 text-sm leading-relaxed font-normal mt-2">
+                                    <p class="text-[#0f172a]/70 text-sm leading-relaxed font-normal mt-2" align="justify">
                                         <?php echo $project['description']; ?>
                                     </p>
                                 </div>
@@ -667,7 +667,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
                         <div
                             class="group relative overflow-hidden aspect-square border border-[#e2e8f0] rounded-2xl transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-md">
                             <!-- Image -->
-                            <img src="<?php echo $resolved_src; ?>" alt="<?php echo $photo['title']; ?>"
+                            <img src="<?php echo $resolved_src; ?>" alt="<?php echo $photo['title']; ?>" loading="lazy"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-95 group-hover:brightness-100 ease-in-out">
 
                             <!-- Simple Text Overlay on Hover - text highlights in white -->
@@ -712,11 +712,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
 
             <!-- Horizontal Scroll Marquee Container -->
             <div class="relative w-full overflow-hidden">
-                <!-- Premium edge-fades to blend cards dynamically -->
-                <div class="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#f8fafc] via-[#f8fafc]/80 to-transparent z-10 pointer-events-none"></div>
-                <div class="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#f8fafc] via-[#f8fafc]/80 to-transparent z-10 pointer-events-none"></div>
+                <!-- Premium edge-fades to blend cards dynamically (placed outside/above the scroll container) -->
+                <div class="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#f8fafc] via-[#f8fafc]/80 to-transparent z-20 pointer-events-none"></div>
+                <div class="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#f8fafc] via-[#f8fafc]/80 to-transparent z-20 pointer-events-none"></div>
 
-                <div class="animate-marquee-container gap-8 py-4 px-4">
+                <div id="testimonials-scroll-container" class="w-full overflow-x-auto scrollbar-none flex gap-8 py-4 px-4 select-none cursor-grab active:cursor-grabbing relative z-10">
                     <?php foreach ($marquee_testimonials as $t): 
                         $initials = get_initials($t['client_name']);
                         
@@ -898,7 +898,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative">
                 <!-- Branding -->
                 <div class="flex flex-col items-center md:items-start space-y-3">
-                    <img src="<?php echo $logo_path; ?>" alt="Delight Builders Logo" class="h-16 w-auto object-contain">
+                    <img src="<?php echo $logo_path; ?>" alt="Delight Builders Logo" loading="lazy" class="h-16 w-auto object-contain">
                     <span class="font-display text-[#0f172a] font-extrabold tracking-widest text-base uppercase">DELIGHT
                         BUILDERS</span>
                     <span class="text-[10px] tracking-widest text-[#64748b] font-semibold uppercase">STRUCTURAL POETRY •
@@ -1062,7 +1062,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
             // Generate sequence frame file path based on zero-padded index
             const pad = (num, size) => num.toString().padStart(size, '0');
             const sequenceFolder = '<?php echo file_exists("assets/sequence") ? "assets/sequence" : "asset/sequence"; ?>';
-            const getFramePath = (index) => `${sequenceFolder}/frame_${pad(index, 3)}_delay-0.066s.png`;
+            const getFramePath = (index) => `${sequenceFolder}/frame_${pad(index, 3)}_delay-0.066s.webp`;
 
             // State management
             let currentFrameIndex = 0;
@@ -1650,6 +1650,174 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_inquiry'])) {
                 observer.observe(statsSection);
             }
 
+
+            // Client Testimonials Scroll and Drag Controller
+            const testimonialsContainer = document.getElementById('testimonials-scroll-container');
+            if (testimonialsContainer) {
+                const cards = testimonialsContainer.children;
+                const N = <?php echo count($db_testimonials); ?>;
+                
+                if (cards.length >= N * 3 && N > 0) {
+                    let W = 0;
+                    function calculateWidth() {
+                        W = cards[N].getBoundingClientRect().left - cards[0].getBoundingClientRect().left;
+                    }
+                    calculateWidth();
+                    window.addEventListener('resize', calculateWidth);
+
+                    // Initial scroll position in the middle to support infinite scrolling in both directions
+                    testimonialsContainer.scrollLeft = W;
+
+                    let isDragging = false;
+                    let startX = 0;
+                    let scrollLeftStart = 0;
+                    let autoScrollSpeed = 0.6; // pixels per frame
+                    let currentDirection = 1; // 1 = scroll right (content left), -1 = scroll left
+                    let autoScrollPaused = false;
+                    let lastX = 0;
+                    let lastTime = 0;
+                    let velocity = 0;
+
+                    // Wrapping scroll position infinitely
+                    function checkWrap() {
+                        if (testimonialsContainer.scrollLeft >= W * 2) {
+                            testimonialsContainer.scrollLeft -= W;
+                        } else if (testimonialsContainer.scrollLeft <= 0) {
+                            testimonialsContainer.scrollLeft += W;
+                        }
+                    }
+
+                    // Auto-scroll loop
+                    function animate() {
+                        if (!isDragging && !autoScrollPaused) {
+                            testimonialsContainer.scrollLeft += autoScrollSpeed * currentDirection;
+                            checkWrap();
+                        }
+                        requestAnimationFrame(animate);
+                    }
+
+                    // Wrap detection during manual scrolling (touch/trackpad/etc.)
+                    testimonialsContainer.addEventListener('scroll', () => {
+                        if (!isDragging) {
+                            checkWrap();
+                        }
+                    });
+
+                    // Mouse down - Start Dragging
+                    testimonialsContainer.addEventListener('mousedown', (e) => {
+                        isDragging = true;
+                        testimonialsContainer.classList.add('cursor-grabbing');
+                        testimonialsContainer.classList.remove('cursor-grab');
+                        startX = e.pageX - testimonialsContainer.offsetLeft;
+                        scrollLeftStart = testimonialsContainer.scrollLeft;
+                        lastX = e.pageX;
+                        lastTime = performance.now();
+                        velocity = 0;
+                    });
+
+                    // Mouse move - Drag
+                    window.addEventListener('mousemove', (e) => {
+                        if (!isDragging) return;
+                        const x = e.pageX - testimonialsContainer.offsetLeft;
+                        const walk = (x - startX) * 1.2; // Drag multiplier
+                        testimonialsContainer.scrollLeft = scrollLeftStart - walk;
+
+                        // Wrap and adjust scroll start dynamically to prevent snap bugs
+                        if (testimonialsContainer.scrollLeft >= W * 2) {
+                            testimonialsContainer.scrollLeft -= W;
+                            scrollLeftStart -= W;
+                        } else if (testimonialsContainer.scrollLeft <= 0) {
+                            testimonialsContainer.scrollLeft += W;
+                            scrollLeftStart += W;
+                        }
+
+                        // Calculate drag speed for velocity
+                        const now = performance.now();
+                        const dt = now - lastTime;
+                        if (dt > 0) {
+                            const dx = e.pageX - lastX;
+                            velocity = dx / dt;
+                        }
+                        lastX = e.pageX;
+                        lastTime = now;
+                    });
+
+                    // Mouse up - End Dragging
+                    window.addEventListener('mouseup', () => {
+                        if (!isDragging) return;
+                        isDragging = false;
+                        testimonialsContainer.classList.remove('cursor-grabbing');
+                        testimonialsContainer.classList.add('cursor-grab');
+
+                        // Set direction based on last drag velocity direction
+                        if (velocity < -0.1) {
+                            currentDirection = 1; // Dragged left -> scroll right (content left)
+                        } else if (velocity > 0.1) {
+                            currentDirection = -1; // Dragged right -> scroll left (content right)
+                        }
+                    });
+
+                    // Hover States
+                    testimonialsContainer.addEventListener('mouseenter', () => {
+                        autoScrollPaused = true;
+                    });
+
+                    testimonialsContainer.addEventListener('mouseleave', () => {
+                        autoScrollPaused = false;
+                        if (isDragging) {
+                            isDragging = false;
+                            testimonialsContainer.classList.remove('cursor-grabbing');
+                            testimonialsContainer.classList.add('cursor-grab');
+                        }
+                    });
+
+                    // Touch events for mobile compatibility
+                    testimonialsContainer.addEventListener('touchstart', (e) => {
+                        isDragging = true;
+                        startX = e.touches[0].pageX - testimonialsContainer.offsetLeft;
+                        scrollLeftStart = testimonialsContainer.scrollLeft;
+                        lastX = e.touches[0].pageX;
+                        lastTime = performance.now();
+                        velocity = 0;
+                    }, { passive: true });
+
+                    testimonialsContainer.addEventListener('touchmove', (e) => {
+                        if (!isDragging) return;
+                        const x = e.touches[0].pageX - testimonialsContainer.offsetLeft;
+                        const walk = (x - startX) * 1.2;
+                        testimonialsContainer.scrollLeft = scrollLeftStart - walk;
+
+                        if (testimonialsContainer.scrollLeft >= W * 2) {
+                            testimonialsContainer.scrollLeft -= W;
+                            scrollLeftStart -= W;
+                        } else if (testimonialsContainer.scrollLeft <= 0) {
+                            testimonialsContainer.scrollLeft += W;
+                            scrollLeftStart += W;
+                        }
+
+                        const now = performance.now();
+                        const dt = now - lastTime;
+                        if (dt > 0) {
+                            const dx = e.touches[0].pageX - lastX;
+                            velocity = dx / dt;
+                        }
+                        lastX = e.touches[0].pageX;
+                        lastTime = now;
+                    }, { passive: true });
+
+                    testimonialsContainer.addEventListener('touchend', () => {
+                        isDragging = false;
+                        if (velocity < -0.1) {
+                            currentDirection = 1;
+                        } else if (velocity > 0.1) {
+                            currentDirection = -1;
+                        }
+                    });
+
+                    // Start loop
+                    animate();
+                }
+            }
 
             // Kick off preloading sequence
             preloadSequence();
