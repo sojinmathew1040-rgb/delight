@@ -92,7 +92,7 @@ try {
     </script>
 
     <!-- Custom styling -->
-    <link rel="stylesheet" href="asset/css/style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="asset/css/style.css?v=<?php echo filemtime('asset/css/style.css'); ?>">
 </head>
 
 <body
@@ -159,7 +159,7 @@ try {
                             
                             <!-- Image Container -->
                             <div class="relative overflow-hidden aspect-[4/3] bg-[#f8fafc]">
-                                <img src="<?php echo $image_path; ?>" alt="<?php echo $project['title']; ?>"
+                                <img src="<?php echo $image_path; ?>" alt="<?php echo $project['title']; ?>" loading="lazy"
                                     class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-in-out filter brightness-[0.98] group-hover:brightness-100">
 
                                 <!-- Subtle image grid layer -->
@@ -205,7 +205,7 @@ try {
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
                 <!-- Branding -->
                 <div class="flex flex-col items-center md:items-start space-y-3">
-                    <img src="<?php echo $logo_path; ?>" alt="Delight Builders Logo" class="h-16 w-auto object-contain">
+                    <img src="<?php echo $logo_path; ?>" alt="Delight Builders Logo" loading="lazy" class="h-16 w-auto object-contain">
                     <span class="font-display text-[#0f172a] font-extrabold tracking-widest text-base uppercase">DELIGHT BUILDERS</span>
                     <span class="text-[10px] tracking-widest text-[#64748b] font-semibold uppercase">STRUCTURAL POETRY • SINCE 2006</span>
                 </div>

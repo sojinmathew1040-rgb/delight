@@ -86,7 +86,7 @@ function render_team_branch($member, $all_members_by_parent, $depth = 0)
             <!-- Avatar / Photo -->
             <div class="relative <?php echo $avatar_classes; ?> rounded-full border border-slate-200 flex items-center justify-center overflow-hidden shadow-inner bg-slate-50">
                 <?php if ($has_image): ?>
-                    <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($member['name']); ?>" class="w-full h-full object-cover text-xs">
+                    <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($member['name']); ?>" loading="lazy" class="w-full h-full object-cover text-xs">
                 <?php else: ?>
                     <?php echo $blueprint_svg; ?>
                     <span class="font-display font-black text-[#0f172a] relative z-10"><?php echo htmlspecialchars($member['avatar_text']); ?></span>
@@ -160,7 +160,7 @@ function render_team_branch_mobile($member, $all_members_by_parent, $depth = 0)
             <!-- Avatar -->
             <div class="relative w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center overflow-hidden bg-slate-50 flex-shrink-0">
                 <?php if ($has_image): ?>
-                    <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($member['name']); ?>" class="w-full h-full object-cover">
+                    <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($member['name']); ?>" loading="lazy" class="w-full h-full object-cover">
                 <?php else: ?>
                     <span class="font-display font-bold text-xs text-[#0f172a]"><?php echo htmlspecialchars($member['avatar_text']); ?></span>
                 <?php endif; ?>
@@ -265,7 +265,7 @@ try {
     </script>
 
     <!-- Custom CSS for luxury overlay grids and scrollbars -->
-    <link rel="stylesheet" href="asset/css/style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="asset/css/style.css?v=<?php echo filemtime('asset/css/style.css'); ?>">
 </head>
 
 <body
@@ -480,7 +480,7 @@ try {
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative">
                 <!-- Branding -->
                 <div class="flex flex-col items-center md:items-start space-y-3">
-                    <img src="<?php echo $logo_path; ?>" alt="Delight Builders Logo" class="h-16 w-auto object-contain">
+                    <img src="<?php echo $logo_path; ?>" alt="Delight Builders Logo" loading="lazy" class="h-16 w-auto object-contain">
                     <span class="font-display text-[#0f172a] font-extrabold tracking-widest text-base uppercase">DELIGHT BUILDERS</span>
                     <span class="text-[10px] tracking-widest text-[#64748b] font-semibold uppercase">STRUCTURAL POETRY • SINCE 2006</span>
                 </div>
